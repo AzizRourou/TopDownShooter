@@ -203,7 +203,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea80e94741caf4357b35fc974d9b9ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speedLowerBound: 1
+  speedUpperBound: 6
+  healthLowerBound: 0.2
+  healthUpperBound: 1.8
 --- !u!114 &257743954596448703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +221,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 0.1
   enemyTag: Player
-  pushForce: 100
 --- !u!114 &2986974659383811375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,3 +237,6 @@ MonoBehaviour:
   - {fileID: 6789470539018324815}
   - {fileID: 257743954596448703}
   - {fileID: 6789470539018324809}
+  health: 1
+  healthbar: {fileID: 0}
+  gameover: {fileID: 0}

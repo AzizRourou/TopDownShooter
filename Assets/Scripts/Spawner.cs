@@ -4,18 +4,30 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public int distance;
-    public GameObject toSpawnPrefab;
+    [SerializeField]
+    int distance;
+    [SerializeReference]
+    GameObject toSpawnPrefab;
+
+    Vector2 position;
+
+    public int wave = 10;
+    public int increment = 4;
 
     void Start()
     {
-        InvokeRepeating("Spawn", 3f, 3);
+        InvokeRepeating("Spawn", 2f, 20f);
     }
 
     void Spawn()
     {
-        Vector2 position = RandomInCircle(distance);
-        Instantiate(toSpawnPrefab, position, Quaternion.identity);
+        for(int i=0; i<wave; i++)
+        {
+            position = RandomInCircle(distance);
+            Instantiate(toSpawnPrefab, position, Quaternion.identity);
+        }
+        wave += increment;
+        increment += 1;
     }
 
     Vector3 RandomInCircle(float radius)

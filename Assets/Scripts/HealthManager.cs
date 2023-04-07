@@ -1,29 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
-    public Behaviour[] disableOnDeath;
-    float health = 1;
+    [SerializeReference]
+    Behaviour[] disableOnDeath;
+    public float health = 1;
     Rigidbody2D rb;
+    [SerializeReference]
+    Image healthbar;
+    [SerializeReference]
+    GameObject gameover;
 
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
-    public void TakeDamage(float amount)//, Vector3 lethalObjectPos, float pushForce)
+    public void TakeDamage(float amount)
     {
-        //Vector2 pushDirection = transform.position - lethalObjectPos;
-        //rb.AddForce(pushDirection.normalized * pushForce, ForceMode2D.Impulse);
-
         health -= amount;
         if (health <= 0)
         {
             health = 0;
             Die();
         }
+
+        if((healthbar != null) && (gameover != null))
+        {
+            healthbar.fillAmount = health;
+        }
+
+        StartCoroutine("HitMarker");
     }
 
     void Die()
@@ -34,13 +44,24 @@ public class HealthManager : MonoBehaviour
         if (gameObject.tag == "Zombie")
         {
             Destroy(gameObject, 2f);
-            gameObject.GetComponent<SpriteRenderer>().color = Color.grey;
+            gameObject.GetComponent<SpriteRenderer>().color = Color.black;
+        }
+        else
+        {
+            Chronometer.StopTimer();
+            gameover.SetActive(true);
         }
 
-        //Disable all the components inside the disableOnDeath array that you will assign from the inspector
         foreach (Behaviour behaviour in disableOnDeath)
         {
             behaviour.enabled = false;
         }
+    }
+
+    IEnumerator HitMarker()
+    {
+        gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 }

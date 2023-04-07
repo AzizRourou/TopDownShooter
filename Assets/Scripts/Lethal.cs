@@ -4,15 +4,34 @@ using UnityEngine;
 
 public class Lethal : MonoBehaviour
 {
-    public float damage;
-    public string enemyTag;
-    //public float pushForce;
+    [SerializeField]
+    float damage;
+    [SerializeField]
+    string enemyTag;
+    float timeColliding;
+    float timeThreshold = 1f;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == enemyTag)
         {
-            other.gameObject.GetComponent<HealthManager>().TakeDamage(damage);//, transform.position, pushForce);
+            other.gameObject.GetComponent<HealthManager>().TakeDamage(damage);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == enemyTag)
+        {
+            if (timeColliding < timeThreshold)
+            {
+                timeColliding += Time.deltaTime;
+            }
+            else
+            {
+                collision.gameObject.GetComponent<HealthManager>().TakeDamage(damage);
+                timeColliding = 0f;
+            }
         }
     }
 
@@ -20,7 +39,8 @@ public class Lethal : MonoBehaviour
     {
         if (collision.gameObject.tag == enemyTag)
         {
-            collision.gameObject.GetComponent<HealthManager>().TakeDamage(damage);//, transform.position, pushForce);
+            timeColliding = 0f;
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(damage);
         }
     }
 }

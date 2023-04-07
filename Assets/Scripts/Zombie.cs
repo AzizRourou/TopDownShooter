@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
 public class Zombie : MonoBehaviour
 {
@@ -7,14 +8,27 @@ public class Zombie : MonoBehaviour
     Vector2 dir;
     float angle = 0f;
     Rigidbody2D rb;
-    public float speed = 2f;
+    float speed = 3.5f;
+    [SerializeField]
+    float speedLowerBound;
+    [SerializeField]
+    float speedUpperBound;
+    [SerializeField]
+    float healthLowerBound;
+    [SerializeField]
+    float healthUpperBound;
+    HealthManager hm;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        hm = GetComponent<HealthManager>();
+        RandomizeZombieState();
+        Debug.Log("speed=" + speed + " health=" + hm.health);
         player = GameObject.Find("Player").transform;
     }
+
     private void Update()
     {
         if (player)
@@ -22,7 +36,7 @@ public class Zombie : MonoBehaviour
             dir = (player.position - transform.position).normalized;
         }
     }
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         rb.velocity = dir * speed;
@@ -40,6 +54,12 @@ public class Zombie : MonoBehaviour
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), gameObject.GetComponent<Collider2D>());
         }
+    }
+
+    void RandomizeZombieState()
+    {
+        speed = Random.Range(speedLowerBound, speedUpperBound);
+        hm.health = Random.Range(healthLowerBound, healthUpperBound);
     }
 }
 
